@@ -10,7 +10,7 @@ exports.getAllPosts = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-};
+}
 
 exports.getOnePost = async (req, res, next) => {
     try {
@@ -25,7 +25,7 @@ exports.getOnePost = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-};
+}
 
 exports.createPost = async (req, res, next) => {
     try {
@@ -37,7 +37,7 @@ exports.createPost = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-};
+}
 
 exports.deletePost = async (req, res, next) => {
     try {
@@ -51,7 +51,7 @@ exports.deletePost = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-};
+}
 
 exports.modifyPost = async (req, res, next) => {
     try {
@@ -68,4 +68,4 @@ exports.modifyPost = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-};
+}

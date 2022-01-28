@@ -12,12 +12,15 @@ app.get('/', async (req, res, next) => {
   res.send({ message: 'Awesome it works 🐻' });
 });
 
+const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/users.route');
 const postRoutes = require('./routes/posts.route');
 const commentRoutes = require('./routes/comments.route');
 const reactionRoutes = require('./routes/reactions.route');
 
 app.use('/api', require('./routes/api.route'));
+
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use('/api/posts', postRoutes); 
 app.use('/api/posts/:postId/comments', commentRoutes); 

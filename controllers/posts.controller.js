@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 exports.getAllPosts = async (req, res, next) => {
     try {
         const posts = await prisma.post.findMany({
-          include: {user: true}
+          include: {user: true, comments: true}
         })
         res.json(posts)
     } catch (error) {
@@ -31,7 +31,8 @@ exports.createPost = async (req, res, next) => {
     try {
         const data = req.body
         const post = await prisma.post.create({
-            data: data
+            data: data,
+            include: {user: true, comments: true}
         })
         res.json(post)
     } catch (error) {

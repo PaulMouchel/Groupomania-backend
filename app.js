@@ -12,7 +12,16 @@ app.get('/', async (req, res, next) => {
   res.send({ message: 'Awesome it works 🐻' });
 });
 
+const userRoutes = require('./routes/users.route');
+const postRoutes = require('./routes/posts.route');
+const commentRoutes = require('./routes/comments.route');
+const reactionRoutes = require('./routes/reactions.route');
+
 app.use('/api', require('./routes/api.route'));
+app.use('/api/users', userRoutes); 
+app.use('/api/posts', postRoutes); 
+app.use('/api/posts/:postId/comments', commentRoutes); 
+app.use('/api/posts/:postId/reactions', reactionRoutes); 
 
 app.use((req, res, next) => {
   next(createError.NotFound());

@@ -42,12 +42,12 @@ exports.createPost = async (req, res, next) => {
 exports.deletePost = async (req, res, next) => {
     try {
         const { id } = req.params
-        const deletedPost = await prisma.post.delete({
+        const post = await prisma.post.delete({
             where: {
                 id: Number(id)
             }
         })
-        res.json(deletedPost)
+        res.json(post)
     } catch (error) {
         next(error)
     }
@@ -62,7 +62,7 @@ exports.modifyPost = async (req, res, next) => {
                 id: Number(id)
             },
             data: data,
-            include: {category: true}
+            // include: {category: true}
         })
         res.json(post)
     } catch (error) {

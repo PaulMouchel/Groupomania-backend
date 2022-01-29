@@ -3,7 +3,7 @@ const router = express.Router()
 
 const postsCtrl = require('../controllers/posts.controller')
 
-const auth = require('../middleware/auth');
+const auth = require('../middleware/auth')
 
 router.get('/', auth, postsCtrl.getAllPosts)
 router.post('/', auth, postsCtrl.createPost)

@@ -28,6 +28,7 @@ exports.getOnePost = async (req, res, next) => {
 }
 
 exports.createPost = async (req, res, next) => {
+    console.log("post")
     try {
         const data = req.body
         const post = await prisma.post.create({

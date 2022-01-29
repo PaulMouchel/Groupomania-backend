@@ -31,20 +31,23 @@ exports.signup = (req, res, next) => {
           }
       })
       if (!user) {
-        return res.status(401).json({ error: "Can't find user with this email" });
+        return res.status(401).json({ auth: false, error: "Can't find user with this email" });
       } 
       bcrypt.compare(password, user.password)
       .then(valid => {
         if (!valid) {
-          return res.status(401).json({ error: 'Incorrect password' });
+          return res.status(401).json({ auth: false, error: 'Incorrect password' });
         } 
+        const token = jwt.sign(
+          { userId: user.id },
+          'RANDOM_TOKEN_SECRET',
+          { expiresIn: '24h' }
+        )
+        // req.session.user = user // ???
         res.status(200).json({
-          userId: user._id,
-          token: jwt.sign(
-            { userId: user._id },
-            'RANDOM_TOKEN_SECRET',
-            { expiresIn: '24h' }
-            )
+          auth: true,
+          user:user,
+          token: token
             })
           })
     } catch (error) {

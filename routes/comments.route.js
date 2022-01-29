@@ -3,11 +3,13 @@ const router = express.Router()
 
 const commentsCtrl = require('../controllers/comments.controller')
 
-router.get('/', commentsCtrl.getAllComments)
-router.post('/', commentsCtrl.createComment)
-router.get('/:id', commentsCtrl.getOneComment)
-router.delete('/:id', commentsCtrl.deleteComment)
-router.patch('/:id', commentsCtrl.modifyComment)
+const auth = require('../middleware/auth')
+
+router.get('/', auth, commentsCtrl.getAllComments)
+router.post('/', auth, commentsCtrl.createComment)
+router.get('/:id', auth, commentsCtrl.getOneComment)
+router.delete('/:id', auth, commentsCtrl.deleteComment)
+router.patch('/:id', auth, commentsCtrl.modifyComment)
 
 module.exports = router
 

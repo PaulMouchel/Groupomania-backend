@@ -3,10 +3,12 @@ const router = express.Router()
 
 const postsCtrl = require('../controllers/posts.controller')
 
-router.get('/', postsCtrl.getAllPosts)
-router.post('/', postsCtrl.createPost)
-router.get('/:id', postsCtrl.getOnePost)
-router.delete('/:id', postsCtrl.deletePost)
-router.patch('/:id', postsCtrl.modifyPost)
+const auth = require('../middleware/auth');
+
+router.get('/', auth, postsCtrl.getAllPosts)
+router.post('/', auth, postsCtrl.createPost)
+router.get('/:id', auth, postsCtrl.getOnePost)
+router.delete('/:id', auth, postsCtrl.deletePost)
+router.patch('/:id', auth, postsCtrl.modifyPost)
 
 module.exports = router

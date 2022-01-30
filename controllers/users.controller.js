@@ -62,6 +62,7 @@ exports.deleteUser = async (req, res, next) => {
 }
 
 exports.modifyUser = async (req, res, next) => {
+    
     try {
         const { id } = req.params
         const data = req.body
@@ -69,8 +70,7 @@ exports.modifyUser = async (req, res, next) => {
             where: {
                 id: Number(id)
             },
-            data: data,
-            include: {category: true}
+            data: data
         })
         res.json(removePassword(user))
     } catch (error) {

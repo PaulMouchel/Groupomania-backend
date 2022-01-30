@@ -1,11 +1,19 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
+const removePassword = (user) => {
+    return Object.keys(user).filter(key =>
+        key !== 'password').reduce((obj, key) =>
+        {
+            obj[key] = user[key];
+            return obj;
+        }, {}
+    )
+}
+
 exports.getAllUsers = async (req, res, next) => {
     try {
-        const users = await prisma.user.findMany({
-        //   include: {category: true}
-        })
+        const users = await prisma.user.findMany()
         res.json(users)
     } catch (error) {
         next(error)
@@ -21,7 +29,7 @@ exports.getOneUser = async (req, res, next) => {
             },
             include: {posts: { include: {comments:true}}, comments: true, reactions: true}
         })
-        res.json(user)
+        res.json(removePassword(user))
     } catch (error) {
         next(error)
     }
@@ -33,7 +41,7 @@ exports.createUser = async (req, res, next) => {
         const user = await prisma.user.create({
             data: data
         })
-        res.json(user)
+        res.json(removePassword(user))
     } catch (error) {
         next(error)
     }
@@ -47,7 +55,7 @@ exports.deleteUser = async (req, res, next) => {
                 id: Number(id)
             }
         })
-        res.json(user)
+        res.json(removePassword(user))
     } catch (error) {
         next(error)
     }
@@ -64,7 +72,7 @@ exports.modifyUser = async (req, res, next) => {
             data: data,
             include: {category: true}
         })
-        res.json(user)
+        res.json(removePassword(user))
     } catch (error) {
         next(error)
     }

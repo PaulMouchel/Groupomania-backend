@@ -16,7 +16,6 @@ exports.createReaction = async (req, res, next) => {
 
 exports.deleteReaction = async (req, res, next) => {
     try {
-        // const { postId, id } = req.params
         const { id } = req.params
         const reaction = await prisma.reaction.delete({
             where: {

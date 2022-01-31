@@ -27,7 +27,7 @@ exports.getOneUser = async (req, res, next) => {
             where: {
                 id: Number(id)
             },
-            include: {posts: { include: {comments:true}}, comments: true, reactions: true}
+            include: {posts: { include: {comments:true, reactions: true}}, comments: true, reactions: true}
         })
         res.json(removePassword(user))
     } catch (error) {

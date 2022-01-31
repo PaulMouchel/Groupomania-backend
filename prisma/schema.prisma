@@ -13,9 +13,9 @@ datasource db {
 model Reaction {
   id          Int       @id @default(autoincrement())
   type        String
-  post        Post  @relation(fields: [postId], references: [id])
+  post        Post  @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   postId      Int
-  user        User  @relation(fields: [userId], references: [id])
+  user        User  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId      Int
 }
 
@@ -23,9 +23,9 @@ model Comment {
   id          Int       @id @default(autoincrement())
   text        String
   createdAt   DateTime  @default(now())
-  post        Post  @relation(fields: [postId], references: [id])
+  post        Post  @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   postId      Int
-  user        User  @relation(fields: [userId], references: [id])
+  user        User  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId      Int
 }
 
@@ -34,7 +34,7 @@ model Post {
   text        String
   imageUrl    String?
   createdAt   DateTime  @default(now())
-  user        User  @relation(fields: [userId], references: [id])
+  user        User  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId      Int
   reactions   Reaction[]
   comments    Comment[]

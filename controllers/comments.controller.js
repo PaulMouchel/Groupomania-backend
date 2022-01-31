@@ -37,6 +37,7 @@ exports.createComment = async (req, res, next) => {
         const data = req.body
         const comment = await prisma.comment.create({
             data: data,
+            include: {user: true}
         })
         res.json(comment)
     } catch (error) {
@@ -46,10 +47,9 @@ exports.createComment = async (req, res, next) => {
 
 exports.deleteComment = async (req, res, next) => {
     try {
-        const { postId, id } = req.params
+        const { id } = req.params
         const comment = await prisma.comment.delete({
             where: {
-                postId: Number(postId),
                 id: Number(id)
             }
         })

@@ -7,8 +7,8 @@ exports.getAllReactions = async (req, res, next) => {
         const reactions = await prisma.reaction.findMany({
             where: {
                 postId: Number(postId)
-            }
-        //   include: {category: true}
+            },
+            include: {user: true}
         })
         res.json(reactions)
     } catch (error) {

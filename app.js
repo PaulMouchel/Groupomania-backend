@@ -32,7 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use('/api/posts', postRoutes); 
 app.use('/api/posts/:postId/comments', commentRoutes); 
-app.use('/api/posts/:postId/reactions', reactionRoutes); 
+app.use('/api/posts', reactionRoutes); 
 
 app.use((req, res, next) => {
   next(createError.NotFound());

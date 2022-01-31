@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
+const jwt = require('jsonwebtoken')
 
 exports.getAllPosts = async (req, res, next) => {
     try {
@@ -42,14 +43,20 @@ exports.createPost = async (req, res, next) => {
 
 exports.deletePost = async (req, res, next) => {
     try {
+        const token = req.headers.authorization.split(' ')[1]
+        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
+        const userId = decodedToken.userId
         const { id } = req.params
-        const post = await prisma.post.delete({
+        console.log(id, userId)
+        const posts = await prisma.post.deleteMany({
             where: {
-                id: Number(id)
+                id: Number(id),
+                userId: userId 
             }
         })
-        res.json(post)
+        res.json(posts)
     } catch (error) {
+        console.log(error)
         next(error)
     }
 }

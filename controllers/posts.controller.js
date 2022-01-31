@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 exports.getAllPosts = async (req, res, next) => {
     try {
         const posts = await prisma.post.findMany({
-          include: {user: true, comments: true, reactions: true}
+          include: {user: true, comments: {include: {user:true}}, reactions: true}
         })
         res.json(posts)
     } catch (error) {

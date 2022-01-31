@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
+const jwt = require('jsonwebtoken')
 
 // exports.getAllComments = async (req, res, next) => {
 //     try {
@@ -47,14 +48,21 @@ exports.createComment = async (req, res, next) => {
 
 exports.deleteComment = async (req, res, next) => {
     try {
+        const token = req.headers.authorization.split(' ')[1]
+        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
+        const userId = decodedToken.userId
         const { id } = req.params
-        const comment = await prisma.comment.delete({
+        console.log(Number(id), userId)
+        const comment = await prisma.comment.deleteMany({
             where: {
-                id: Number(id)
+                id: Number(id),
+                userId: userId 
             }
         })
+        console.log(comment)
         res.json(comment)
     } catch (error) {
+        console.log(error)
         next(error)
     }
 }

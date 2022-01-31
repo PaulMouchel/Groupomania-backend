@@ -52,17 +52,14 @@ exports.deleteComment = async (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
         const userId = decodedToken.userId
         const { id } = req.params
-        console.log(Number(id), userId)
-        const comment = await prisma.comment.deleteMany({
+        const comments = await prisma.comment.deleteMany({
             where: {
                 id: Number(id),
                 userId: userId 
             }
         })
-        console.log(comment)
-        res.json(comment)
+        res.json(comments)
     } catch (error) {
-        console.log(error)
         next(error)
     }
 }

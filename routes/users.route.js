@@ -3,7 +3,8 @@ const router = express.Router()
 
 const usersCtrl = require('../controllers/users.controller')
 
-const auth = require('../middleware/auth')
+const auth = require('../middleware/auth.middleware')
+const multer = require('../middleware/multer.middleware')
 
 router.get('/', auth, usersCtrl.getAllUsers)
 router.post('/', auth, usersCtrl.createUser)

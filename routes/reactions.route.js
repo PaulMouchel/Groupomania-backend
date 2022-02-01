@@ -3,7 +3,7 @@ const router = express.Router()
 
 const reactionsCtrl = require('../controllers/reactions.controller')
 
-const auth = require('../middleware/auth')
+const auth = require('../middleware/auth.middleware')
 
 router.post('/', auth, reactionsCtrl.createReaction)
 router.delete('/:id', auth, reactionsCtrl.deleteReaction)

@@ -30,8 +30,16 @@ exports.getOnePost = async (req, res, next) => {
 exports.createPost = async (req, res, next) => {
     try {
         const data = req.body
+        data.userId = Number(data.userId)
+        let fullData
+        if (req.file) {
+            const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            fullData = {...data, imageUrl:imageUrl}
+        } else {
+            fullData = data
+        }
         const post = await prisma.post.create({
-            data: data,
+            data: fullData,
             include: {user: true, comments: true, reactions:true}
         })
         res.json(post)

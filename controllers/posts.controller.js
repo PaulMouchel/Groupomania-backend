@@ -20,7 +20,6 @@ exports.getOnePost = async (req, res, next) => {
             where: {
                 id: Number(id)
             },
-            // include: {category: true}
         })
         res.json(post)
     } catch (error) {
@@ -33,7 +32,7 @@ exports.createPost = async (req, res, next) => {
         const data = req.body
         const post = await prisma.post.create({
             data: data,
-            include: {user: true, comments: true}
+            include: {user: true, comments: true, reactions:true}
         })
         res.json(post)
     } catch (error) {

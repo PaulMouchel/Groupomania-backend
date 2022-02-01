@@ -25,6 +25,7 @@ const userRoutes = require('./routes/users.route');
 const postRoutes = require('./routes/posts.route');
 const commentRoutes = require('./routes/comments.route');
 const reactionRoutes = require('./routes/reactions.route');
+const path = require('path');
 
 app.use('/api', require('./routes/api.route'));
 
@@ -32,7 +33,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use('/api/posts', postRoutes); 
 app.use('/api/comments', commentRoutes); 
-app.use('/api/reactions', reactionRoutes); 
+app.use('/api/reactions', reactionRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use((req, res, next) => {
   next(createError.NotFound());

@@ -10,6 +10,6 @@ router.get('/', auth, usersCtrl.getAllUsers)
 router.post('/', auth, usersCtrl.createUser)
 router.get('/:id', auth, usersCtrl.getOneUser)
 router.delete('/:id', auth, usersCtrl.deleteUser)
-router.patch('/:id', auth, usersCtrl.modifyUser)
+router.patch('/:id', auth, multer, usersCtrl.modifyUser)
 
 module.exports = router

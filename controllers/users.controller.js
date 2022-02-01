@@ -78,13 +78,18 @@ exports.modifyUser = async (req, res, next) => {
     try {
         const { id } = req.params
         const data = req.body
-        const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        console.log("imageUrl:",imageUrl)
+        let fullData
+        if (req.file) {
+            const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            fullData = {...data, imageUrl:imageUrl}
+        } else {
+            fullData = { name: data.name, description: data.description }
+        }
         const user = await prisma.user.update({
             where: {
                 id: Number(id)
             },
-            data: {...data, imageUrl:imageUrl}
+            data: fullData
         })
         res.json(removePassword(user))
     } catch (error) {

@@ -27,8 +27,6 @@ const commentRoutes = require('./routes/comments.route');
 const reactionRoutes = require('./routes/reactions.route');
 const path = require('path');
 
-app.use('/api', require('./routes/api.route'));
-
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use('/api/posts', postRoutes); 

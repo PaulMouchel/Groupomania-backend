@@ -54,7 +54,6 @@ exports.deletePost = async (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
         const userId = decodedToken.userId
         const { id } = req.params
-        console.log(id, userId)
         const posts = await prisma.post.deleteMany({
             where: {
                 id: Number(id),
@@ -63,7 +62,6 @@ exports.deletePost = async (req, res, next) => {
         })
         res.json(posts)
     } catch (error) {
-        console.log(error)
         next(error)
     }
 }

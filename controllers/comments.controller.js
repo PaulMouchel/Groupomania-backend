@@ -66,9 +66,23 @@ exports.deleteComment = async (req, res, next) => {
 
 exports.modifyComment = async (req, res, next) => {
     try {
+        const token = req.headers.authorization.split(' ')[1]
+        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
+        const userId = decodedToken.userId
         const { id } = req.params
         const data = req.body
-        const comment = await prisma.comment.update({
+
+        const comment = await prisma.comment.findUnique({
+            where: {
+                id: Number(id)
+            }
+        })
+
+        if (comment.userId !== userId) {
+            throw Error
+        }
+
+        const newComment = await prisma.comment.update({
             where: {
                 id: Number(id)
             },
@@ -77,7 +91,7 @@ exports.modifyComment = async (req, res, next) => {
                 user: true
             }
         })
-        res.json(comment)
+        res.json(newComment)
     } catch (error) {
         next(error)
     }

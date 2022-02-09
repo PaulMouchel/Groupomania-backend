@@ -68,16 +68,45 @@ exports.deletePost = async (req, res, next) => {
 
 exports.modifyPost = async (req, res, next) => {
     try {
+        const token = req.headers.authorization.split(' ')[1]
+        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
+        const userId = decodedToken.userId
+        const currentUser = await prisma.user.findUnique({
+            where: {
+                id: userId
+            }
+        })
+
         const { id } = req.params
         const data = req.body
-        const post = await prisma.post.update({
+
+        const oldPost = await prisma.post.findUnique({
             where: {
                 id: Number(id)
-            },
-            data: data,
-            // include: {category: true}
+            }
         })
-        res.json(post)
+
+        if (oldPost.userId === currentUser.id) {
+            const post = await prisma.post.update({
+                where: {
+                    id: Number(id)
+                },
+                data: data,
+                include: {
+                    user: true,
+                    reactions: true,
+                    comments: {
+                        include: {
+                            user: true
+                        }
+                    }
+                }
+            })
+            res.json(post)
+        } else {
+            throw error
+        }
+        
     } catch (error) {
         next(error)
     }

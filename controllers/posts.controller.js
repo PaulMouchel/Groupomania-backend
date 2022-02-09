@@ -80,6 +80,14 @@ exports.modifyPost = async (req, res, next) => {
         const { id } = req.params
         const data = req.body
 
+        let fullData
+        if (req.file) {
+            const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            fullData = {...data, imageUrl:imageUrl}
+        } else {
+            fullData = data
+        }
+
         const oldPost = await prisma.post.findUnique({
             where: {
                 id: Number(id)
@@ -91,7 +99,7 @@ exports.modifyPost = async (req, res, next) => {
                 where: {
                     id: Number(id)
                 },
-                data: data,
+                data: fullData,
                 include: {
                     user: true,
                     reactions: true,

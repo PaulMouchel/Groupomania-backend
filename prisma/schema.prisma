@@ -47,6 +47,7 @@ model User {
   password    String
   description String?
   imageUrl    String?
+  isAdmin     Boolean   @default(false)
   createdAt   DateTime  @default(now())
   posts       Post[]
   reactions   Reaction[]

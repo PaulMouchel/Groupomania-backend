@@ -1,6 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-const jwt = require('jsonwebtoken')
 
 exports.getAllPosts = async (req, res, next) => {
     try {
@@ -13,19 +12,19 @@ exports.getAllPosts = async (req, res, next) => {
     }
 }
 
-exports.getOnePost = async (req, res, next) => {
-    try {
-        const { id } = req.params
-        const post = await prisma.post.findUnique({
-            where: {
-                id: Number(id)
-            },
-        })
-        res.json(post)
-    } catch (error) {
-        next(error)
-    }
-}
+// exports.getOnePost = async (req, res, next) => {
+//     try {
+//         const { id } = req.params
+//         const post = await prisma.post.findUnique({
+//             where: {
+//                 id: Number(id)
+//             },
+//         })
+//         res.json(post)
+//     } catch (error) {
+//         next(error)
+//     }
+// }
 
 exports.createPost = async (req, res, next) => {
     try {
@@ -50,17 +49,25 @@ exports.createPost = async (req, res, next) => {
 
 exports.deletePost = async (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(' ')[1]
-        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
-        const userId = decodedToken.userId
+        const currentUser = res.locals.currentUser
         const { id } = req.params
-        const posts = await prisma.post.deleteMany({
+
+        const post = await prisma.post.findUnique({
             where: {
-                id: Number(id),
-                userId: userId 
+                id: Number(id)
             }
         })
-        res.json(posts)
+
+        if (post.userId !== currentUser.id && !currentUser.isAdmin) {
+            throw Error
+        }
+
+        const deletedPost = await prisma.post.delete({
+            where: {
+                id: Number(id)
+            }
+        })
+        res.json(deletedPost)
     } catch (error) {
         next(error)
     }
@@ -68,15 +75,7 @@ exports.deletePost = async (req, res, next) => {
 
 exports.modifyPost = async (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(' ')[1]
-        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
-        const userId = decodedToken.userId
-        const currentUser = await prisma.user.findUnique({
-            where: {
-                id: userId
-            }
-        })
-
+        const currentUser = res.locals.currentUser
         const { id } = req.params
         const data = req.body
 
@@ -94,7 +93,7 @@ exports.modifyPost = async (req, res, next) => {
             }
         })
 
-        if (oldPost.userId === currentUser.id) {
+        if (oldPost.userId === currentUser.id || currentUser.isAdmin) {
             const post = await prisma.post.update({
                 where: {
                     id: Number(id)

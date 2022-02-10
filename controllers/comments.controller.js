@@ -30,12 +30,12 @@ exports.deleteComment = async (req, res, next) => {
             throw Error
         }
 
-        const deletedcomment = await prisma.comment.delete({
+        const deletedComment = await prisma.comment.delete({
             where: {
                 id: Number(id)
             }
         })
-        res.json(deletedcomment)
+        res.json(deletedComment)
     } catch (error) {
         next(error)
     }

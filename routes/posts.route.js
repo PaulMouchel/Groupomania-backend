@@ -9,7 +9,7 @@ const multer = require('../middleware/multer.middleware')
 
 router.get('/', auth, postsCtrl.getAllPosts)
 router.post('/', auth, multer, postsCtrl.createPost)
-router.get('/:id', auth, postsCtrl.getOnePost)
+// router.get('/:id', auth, postsCtrl.getOnePost)
 router.delete('/:id', auth, currentUser, postsCtrl.deletePost)
 router.patch('/:id', auth, currentUser, multer, postsCtrl.modifyPost)
 

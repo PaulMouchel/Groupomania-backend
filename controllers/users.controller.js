@@ -62,13 +62,25 @@ exports.createUser = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
     try {
+        const currentUser = res.locals.currentUser
         const { id } = req.params
-        const user = await prisma.user.delete({
+
+        const user = await prisma.post.findUnique({
             where: {
                 id: Number(id)
             }
         })
-        res.json(removePassword(user))
+
+        if (user.id !== currentUser.id && !currentUser.isAdmin) {
+            throw Error
+        }
+
+        const deletedUser = await prisma.user.delete({
+            where: {
+                id: Number(id)
+            }
+        })
+        res.json(removePassword(deletedUser))
     } catch (error) {
         next(error)
     }
@@ -76,6 +88,7 @@ exports.deleteUser = async (req, res, next) => {
 
 exports.modifyUser = async (req, res, next) => {
     try {
+        const currentUser = res.locals.currentUser
         const { id } = req.params
         const data = req.body
         let fullData
@@ -85,13 +98,24 @@ exports.modifyUser = async (req, res, next) => {
         } else {
             fullData = { name: data.name, description: data.description }
         }
-        const user = await prisma.user.update({
+
+        const user = await prisma.post.findUnique({
+            where: {
+                id: Number(id)
+            }
+        })
+
+        if (user.id !== currentUser.id && !currentUser.isAdmin) {
+            throw Error
+        }
+
+        const modifiedUser = await prisma.user.update({
             where: {
                 id: Number(id)
             },
             data: fullData
         })
-        res.json(removePassword(user))
+        res.json(removePassword(modifiedUser))
     } catch (error) {
         next(error)
     }

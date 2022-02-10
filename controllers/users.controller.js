@@ -11,14 +11,14 @@ const removePassword = (user) => {
     )
 }
 
-exports.getAllUsers = async (req, res, next) => {
-    try {
-        const users = await prisma.user.findMany()
-        res.json(users)
-    } catch (error) {
-        next(error)
-    }
-}
+// exports.getAllUsers = async (req, res, next) => {
+//     try {
+//         const users = await prisma.user.findMany()
+//         res.json(users)
+//     } catch (error) {
+//         next(error)
+//     }
+// }
 
 exports.getOneUser = async (req, res, next) => {
     try {

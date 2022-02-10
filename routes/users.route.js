@@ -6,7 +6,7 @@ const usersCtrl = require('../controllers/users.controller')
 const auth = require('../middleware/auth.middleware')
 const multer = require('../middleware/multer.middleware')
 
-router.get('/', auth, usersCtrl.getAllUsers)
+// router.get('/', auth, usersCtrl.getAllUsers)
 router.post('/', auth, usersCtrl.createUser)
 router.get('/:id', auth, usersCtrl.getOneUser)
 router.delete('/:id', auth, usersCtrl.deleteUser)

@@ -1,37 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-const jwt = require('jsonwebtoken')
-
-// exports.getAllComments = async (req, res, next) => {
-//     try {
-//         const { postId } = req.params
-//         const comments = await prisma.comment.findMany({
-//             where: {
-//                 postId: Number(postId)
-//             }
-//         //   include: {category: true}
-//         })
-//         res.json(comments)
-//     } catch (error) {
-//         next(error)
-//     }
-// }
-
-// exports.getOneComment = async (req, res, next) => {
-//     try {
-//         const { postId, id } = req.params
-//         const comment = await prisma.comment.findUnique({
-//             where: {
-//                 postId: Number(postId),
-//                 id: Number(id)
-//             },
-//             // include: {category: true}
-//         })
-//         res.json(comment)
-//     } catch (error) {
-//         next(error)
-//     }
-// }
 
 exports.createComment = async (req, res, next) => {
     try {
@@ -48,17 +16,26 @@ exports.createComment = async (req, res, next) => {
 
 exports.deleteComment = async (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(' ')[1]
-        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
-        const userId = decodedToken.userId
+        const currentUser = res.locals.currentUser
+
         const { id } = req.params
-        const comments = await prisma.comment.deleteMany({
+
+        const comment = await prisma.comment.findUnique({
             where: {
-                id: Number(id),
-                userId: userId 
+                id: Number(id)
             }
         })
-        res.json(comments)
+
+        if (comment.userId !== currentUser.id && !currentUser.isAdmin) {
+            throw Error
+        }
+
+        const deletedcomment = await prisma.comment.delete({
+            where: {
+                id: Number(id)
+            }
+        })
+        res.json(deletedcomment)
     } catch (error) {
         next(error)
     }
@@ -66,9 +43,8 @@ exports.deleteComment = async (req, res, next) => {
 
 exports.modifyComment = async (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(' ')[1]
-        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
-        const userId = decodedToken.userId
+        const currentUser = res.locals.currentUser
+
         const { id } = req.params
         const data = req.body
 
@@ -78,7 +54,7 @@ exports.modifyComment = async (req, res, next) => {
             }
         })
 
-        if (comment.userId !== userId) {
+        if (comment.userId !== currentUser.id && !currentUser.isAdmin) {
             throw Error
         }
 

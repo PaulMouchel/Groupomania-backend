@@ -12,20 +12,6 @@ exports.getAllPosts = async (req, res, next) => {
     }
 }
 
-// exports.getOnePost = async (req, res, next) => {
-//     try {
-//         const { id } = req.params
-//         const post = await prisma.post.findUnique({
-//             where: {
-//                 id: Number(id)
-//             },
-//         })
-//         res.json(post)
-//     } catch (error) {
-//         next(error)
-//     }
-// }
-
 exports.createPost = async (req, res, next) => {
     try {
         const data = req.body

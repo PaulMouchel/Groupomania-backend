@@ -99,7 +99,7 @@ exports.modifyUser = async (req, res, next) => {
             fullData = { name: data.name, description: data.description }
         }
 
-        const user = await prisma.post.findUnique({
+        const user = await prisma.user.findUnique({
             where: {
                 id: Number(id)
             }

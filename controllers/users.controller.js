@@ -65,7 +65,7 @@ exports.deleteUser = async (req, res, next) => {
         const currentUser = res.locals.currentUser
         const { id } = req.params
 
-        const user = await prisma.post.findUnique({
+        const user = await prisma.user.findUnique({
             where: {
                 id: Number(id)
             }

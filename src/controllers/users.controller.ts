@@ -1,4 +1,5 @@
-const { PrismaClient } = require('@prisma/client')
+import { Request, Response, NextFunction } from "express";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient()
 
 const removePassword = (user) => {
@@ -11,7 +12,7 @@ const removePassword = (user) => {
     )
 }
 
-exports.getOneUser = async (req, res, next) => {
+export const getOneUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params
         const user = await prisma.user.findUnique({
@@ -39,7 +40,7 @@ exports.getOneUser = async (req, res, next) => {
     }
 }
 
-exports.createUser = async (req, res, next) => {
+export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const data = req.body
         const user = await prisma.user.create({
@@ -51,7 +52,7 @@ exports.createUser = async (req, res, next) => {
     }
 }
 
-exports.deleteUser = async (req, res, next) => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const currentUser = res.locals.currentUser
         const { id } = req.params
@@ -77,7 +78,7 @@ exports.deleteUser = async (req, res, next) => {
     }
 }
 
-exports.modifyUser = async (req, res, next) => {
+export const modifyUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const currentUser = res.locals.currentUser
         const { id } = req.params

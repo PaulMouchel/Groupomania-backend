@@ -1,7 +1,8 @@
-const { PrismaClient } = require('@prisma/client')
+import { Request, Response, NextFunction } from "express";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient()
 
-exports.createReaction = async (req, res, next) => {
+export const createReaction = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const data = req.body
         console.log(data)
@@ -14,7 +15,7 @@ exports.createReaction = async (req, res, next) => {
     }
 }
 
-exports.deleteReaction = async (req, res, next) => {
+export const deleteReaction = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params
         const reaction = await prisma.reaction.delete({
@@ -28,7 +29,7 @@ exports.deleteReaction = async (req, res, next) => {
     }
 }
 
-exports.modifyReaction = async (req, res, next) => {
+export const modifyReaction = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params
         const data = req.body

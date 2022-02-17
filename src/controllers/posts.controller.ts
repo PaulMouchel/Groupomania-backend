@@ -1,7 +1,8 @@
-const { PrismaClient } = require('@prisma/client')
+import { Request, Response, NextFunction } from "express";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient()
 
-exports.getAllPosts = async (req, res, next) => {
+export const getAllPosts = async (req: Request, res, next) => {
     try {
         const posts = await prisma.post.findMany({
           include: {user: true, comments: {include: {user:true}}, reactions: true}
@@ -12,7 +13,7 @@ exports.getAllPosts = async (req, res, next) => {
     }
 }
 
-exports.createPost = async (req, res, next) => {
+export const createPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const data = req.body
         data.userId = Number(data.userId)
@@ -33,7 +34,7 @@ exports.createPost = async (req, res, next) => {
     }
 }
 
-exports.deletePost = async (req, res, next) => {
+export const deletePost = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const currentUser = res.locals.currentUser
         const { id } = req.params
@@ -59,7 +60,7 @@ exports.deletePost = async (req, res, next) => {
     }
 }
 
-exports.modifyPost = async (req, res, next) => {
+export const modifyPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const currentUser = res.locals.currentUser
         const { id } = req.params
@@ -97,7 +98,7 @@ exports.modifyPost = async (req, res, next) => {
             })
             res.json(post)
         } else {
-            throw error
+            throw new Error
         }
         
     } catch (error) {

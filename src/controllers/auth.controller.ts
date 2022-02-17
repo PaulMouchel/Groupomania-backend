@@ -1,6 +1,8 @@
+import { Request, Response, NextFunction } from "express";
+import { PrismaClient } from "@prisma/client";
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client')
+
 const prisma = new PrismaClient()
 
 const removePassword = (user) => {
@@ -13,7 +15,7 @@ const removePassword = (user) => {
     )
 }
 
-exports.signup = (req, res, next) => {
+export const signup = (req: Request, res: Response, next: NextFunction) => {
     bcrypt.hash(req.body.password, 10)
     .then(async hash => {
         const data = req.body
@@ -29,7 +31,7 @@ exports.signup = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 }
 
-exports.login = async (req, res, next) => {
+export const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body
         const user = await prisma.user.findUnique({

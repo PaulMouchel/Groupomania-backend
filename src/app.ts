@@ -1,8 +1,11 @@
-const express = require('express');
-const createError = require('http-errors');
-const morgan = require('morgan');
-const helmet = require("helmet");
-require('dotenv').config();
+import express from 'express'
+
+const createError = require('http-errors')
+import morgan from 'morgan';
+import helmet from 'helmet'
+import dotenv from 'dotenv'
+
+dotenv.config();
 
 const app = express();
 

@@ -8,4 +8,4 @@ router.post('/', auth, createReaction)
 router.delete('/:id', auth, deleteReaction)
 router.patch('/:id', auth, modifyReaction)
 
-module.exports = router
+export default router

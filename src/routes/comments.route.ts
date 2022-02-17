@@ -9,6 +9,6 @@ router.post('/', auth, createComment)
 router.delete('/:id', auth, currentUser, deleteComment)
 router.patch('/:id', auth, currentUser, modifyComment)
 
-module.exports = router
+export default router
 
 

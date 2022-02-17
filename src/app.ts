@@ -1,16 +1,23 @@
-import express from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 
 const createError = require('http-errors')
 import morgan from 'morgan';
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 
+import authRoutes from './routes/auth.route'
+import userRoutes from './routes/users.route'
+import postRoutes from './routes/posts.route'
+import commentRoutes from './routes/comments.route'
+import reactionRoutes from './routes/reactions.route'
+
+
 dotenv.config();
 
 const app = express();
 
 app.use(helmet())
-app.use((req, res, next) => {
+app.use((req:Request, res:Response, next:NextFunction) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
@@ -21,15 +28,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 
-app.get('/', async (req, res, next) => {
+app.get('/', async (req:Request, res:Response, next:NextFunction) => {
   res.send({ message: 'Awesome it works 🐻' });
 });
 
-const authRoutes = require('./routes/auth.route');
-const userRoutes = require('./routes/users.route');
-const postRoutes = require('./routes/posts.route');
-const commentRoutes = require('./routes/comments.route');
-const reactionRoutes = require('./routes/reactions.route');
 const path = require('path');
 
 app.use('/api/auth', authRoutes);
@@ -39,11 +41,11 @@ app.use('/api/comments', commentRoutes);
 app.use('/api/reactions', reactionRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use((req, res, next) => {
+app.use((req:Request, res:Response, next:NextFunction) => {
   next(createError.NotFound());
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req:Request, res:Response, next:NextFunction) => {
   res.status(err.status || 500);
   res.send({
     status: err.status || 500,

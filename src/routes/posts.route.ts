@@ -11,4 +11,4 @@ router.post('/', auth, multer, createPost)
 router.delete('/:id', auth, currentUser, deletePost)
 router.patch('/:id', auth, currentUser, multer, modifyPost)
 
-module.exports = router
+export default router

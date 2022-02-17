@@ -6,4 +6,4 @@ import { signup, login } from '../controllers/auth.controller'
 router.post('/signup', signup);
 router.post('/login', login);
 
-module.exports = router;
+export default router

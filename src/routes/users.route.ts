@@ -11,4 +11,4 @@ router.get('/:id', auth, getOneUser)
 router.delete('/:id', auth, currentUser, deleteUser)
 router.patch('/:id', auth, currentUser, multer, modifyUser)
 
-module.exports = router
+export default router

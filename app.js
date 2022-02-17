@@ -1,10 +1,12 @@
 const express = require('express');
 const createError = require('http-errors');
 const morgan = require('morgan');
+const helmet = require("helmet");
 require('dotenv').config();
 
 const app = express();
 
+app.use(helmet())
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');

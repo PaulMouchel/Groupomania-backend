@@ -28,10 +28,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 
-app.get('/', async (req:Request, res:Response, next:NextFunction) => {
-  res.send({ message: 'Awesome it works 🐻' });
-});
-
 const path = require('path');
 
 app.use('/api/auth', authRoutes);

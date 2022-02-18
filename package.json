@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/app.ts",
+  "engines": { "node": "16.13.1" },
   "scripts": {
     "start": "tsc && node dist/app.js",
     "dev": "nodemon --config nodemon.json src/app.ts",
-    "tsc": "tsc"
+    "postinstall": "tsc",
+    "deploy": "git add . && git commit -am Heroku && git push heroku main"
   },
   "keywords": [],
   "author": "",

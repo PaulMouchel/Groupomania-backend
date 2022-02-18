@@ -1,10 +1,26 @@
-const { PrismaClient } = require('@prisma/client')
+import { Request, Response, NextFunction } from "express"
+import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 
-exports.getAllPosts = async (req, res, next) => {
+export const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const posts = await prisma.post.findMany({
-          include: {user: true, comments: {include: {user:true}}, reactions: true}
+            include: {
+                user: true, 
+                comments: {
+                    include: {
+                        user:{
+                            select: {
+                                id: true,
+                                name: true,
+                                imageUrl: true,
+                                isAdmin: true
+                            }
+                        }
+                    }
+                }, 
+                reactions: true
+            }
         })
         res.json(posts)
     } catch (error) {
@@ -12,11 +28,11 @@ exports.getAllPosts = async (req, res, next) => {
     }
 }
 
-exports.createPost = async (req, res, next) => {
+export const createPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const data = req.body
         data.userId = Number(data.userId)
-        let fullData
+        let fullData:any
         if (req.file) {
             const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
             fullData = {...data, imageUrl:imageUrl}
@@ -25,7 +41,18 @@ exports.createPost = async (req, res, next) => {
         }
         const post = await prisma.post.create({
             data: fullData,
-            include: {user: true, comments: true, reactions:true}
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        imageUrl: true,
+                        isAdmin: true
+                    }
+                },
+                comments: true, 
+                reactions:true
+            }
         })
         res.json(post)
     } catch (error) {
@@ -33,7 +60,7 @@ exports.createPost = async (req, res, next) => {
     }
 }
 
-exports.deletePost = async (req, res, next) => {
+export const deletePost = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const currentUser = res.locals.currentUser
         const { id } = req.params
@@ -45,7 +72,7 @@ exports.deletePost = async (req, res, next) => {
         })
 
         if (post.userId !== currentUser.id && !currentUser.isAdmin) {
-            throw Error
+            return res.status(401).json({ auth: false, error: 'Access denied' })
         }
 
         const deletedPost = await prisma.post.delete({
@@ -59,13 +86,13 @@ exports.deletePost = async (req, res, next) => {
     }
 }
 
-exports.modifyPost = async (req, res, next) => {
+export const modifyPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const currentUser = res.locals.currentUser
         const { id } = req.params
         const data = req.body
 
-        let fullData
+        let fullData:any
         if (req.file) {
             const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
             fullData = {...data, imageUrl:imageUrl}
@@ -86,18 +113,31 @@ exports.modifyPost = async (req, res, next) => {
                 },
                 data: fullData,
                 include: {
-                    user: true,
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            imageUrl: true,
+                            isAdmin: true
+                        }
+                    },
                     reactions: true,
                     comments: {
                         include: {
-                            user: true
+                            user: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    imageUrl: true,
+                                }
+                            }
                         }
                     }
                 }
             })
             res.json(post)
         } else {
-            throw error
+            return res.status(401).json({ auth: false, error: 'Access denied' })
         }
         
     } catch (error) {

@@ -1,15 +1,16 @@
-const jwt = require('jsonwebtoken');
+import { Request, Response, NextFunction } from "express";
+import jwt from 'jsonwebtoken'
 
-module.exports = (req, res, next) => {
+const auth = (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.headers.authorization.split(' ')[1]
-        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
-        const userId = decodedToken.userId;
+        const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET)
+        const userId = (<any>decodedToken).userId
         if (req.body.userId && req.body.userId !== userId) {
             throw 'Invalid user ID';
         } else {
             res.locals.currentUserId = userId
-            next();
+            next()
         }
     } catch (error) {
         res.status(401).json({
@@ -19,3 +20,4 @@ module.exports = (req, res, next) => {
     }
 };
 
+export default auth

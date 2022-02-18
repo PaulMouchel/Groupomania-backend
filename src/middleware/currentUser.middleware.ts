@@ -1,7 +1,8 @@
-const { PrismaClient } = require('@prisma/client')
+import { Request, Response, NextFunction } from "express";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient()
 
-module.exports = async (req, res, next) => {
+const currentUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = res.locals.currentUserId
         const currentUser = await prisma.user.findUnique({
@@ -22,7 +23,8 @@ module.exports = async (req, res, next) => {
         res.status(401).json({
             auth: false, 
             error: error
-        });
+        })
     }
-};
+}
 
+export default currentUser

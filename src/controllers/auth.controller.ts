@@ -1,9 +1,12 @@
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client')
+import { Request, Response, NextFunction } from "express"
+import { PrismaClient } from "@prisma/client";
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { User } from "@prisma/client"
+
 const prisma = new PrismaClient()
 
-const removePassword = (user) => {
+const removePassword = (user:User) => {
     return Object.keys(user).filter(key =>
         key !== 'password').reduce((obj, key) =>
         {
@@ -13,9 +16,9 @@ const removePassword = (user) => {
     )
 }
 
-exports.signup = (req, res, next) => {
+export const signup = (req: Request, res: Response, next: NextFunction) => {
     bcrypt.hash(req.body.password, 10)
-    .then(async hash => {
+    .then(async (hash:string) => {
         const data = req.body
         const user = await prisma.user.create({
             data: {
@@ -29,7 +32,7 @@ exports.signup = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 }
 
-exports.login = async (req, res, next) => {
+export const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body
         const user = await prisma.user.findUnique({
@@ -40,8 +43,9 @@ exports.login = async (req, res, next) => {
         if (!user) {
           return res.status(401).json({ auth: false, error: "Can't find user with this email" });
         } 
+
         bcrypt.compare(password, user.password)
-        .then(valid => {
+        .then((valid:boolean) => {
             if (!valid) {
                 return res.status(401).json({ auth: false, error: 'Incorrect password' });
             } 
@@ -55,7 +59,7 @@ exports.login = async (req, res, next) => {
                 user: JSON.stringify(removePassword(user)),
                 token: token
             })
-         })
+        })
     } catch (error) {
         next(error)
     }

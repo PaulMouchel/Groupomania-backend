@@ -9,9 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.modifyReaction = exports.deleteReaction = exports.createReaction = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-exports.createReaction = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const createReaction = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = req.body;
         console.log(data);
@@ -24,7 +25,8 @@ exports.createReaction = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         next(error);
     }
 });
-exports.deleteReaction = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createReaction = createReaction;
+const deleteReaction = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const reaction = yield prisma.reaction.delete({
@@ -38,7 +40,8 @@ exports.deleteReaction = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         next(error);
     }
 });
-exports.modifyReaction = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteReaction = deleteReaction;
+const modifyReaction = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const data = req.body;
@@ -54,4 +57,5 @@ exports.modifyReaction = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         next(error);
     }
 });
+exports.modifyReaction = modifyReaction;
 //# sourceMappingURL=reactions.controller.js.map

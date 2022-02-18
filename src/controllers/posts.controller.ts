@@ -1,11 +1,26 @@
-import { Request, Response, NextFunction } from "express";
-import { PrismaClient } from "@prisma/client";
+import { Request, Response, NextFunction } from "express"
+import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 
-export const getAllPosts = async (req: Request, res, next) => {
+export const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const posts = await prisma.post.findMany({
-          include: {user: true, comments: {include: {user:true}}, reactions: true}
+            include: {
+                user: true, 
+                comments: {
+                    include: {
+                        user:{
+                            select: {
+                                id: true,
+                                name: true,
+                                imageUrl: true,
+                                isAdmin: true
+                            }
+                        }
+                    }
+                }, 
+                reactions: true
+            }
         })
         res.json(posts)
     } catch (error) {
@@ -17,7 +32,7 @@ export const createPost = async (req: Request, res: Response, next: NextFunction
     try {
         const data = req.body
         data.userId = Number(data.userId)
-        let fullData
+        let fullData:any
         if (req.file) {
             const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
             fullData = {...data, imageUrl:imageUrl}
@@ -26,7 +41,18 @@ export const createPost = async (req: Request, res: Response, next: NextFunction
         }
         const post = await prisma.post.create({
             data: fullData,
-            include: {user: true, comments: true, reactions:true}
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        imageUrl: true,
+                        isAdmin: true
+                    }
+                },
+                comments: true, 
+                reactions:true
+            }
         })
         res.json(post)
     } catch (error) {
@@ -46,7 +72,7 @@ export const deletePost = async (req: Request, res: Response, next: NextFunction
         })
 
         if (post.userId !== currentUser.id && !currentUser.isAdmin) {
-            throw Error
+            return res.status(401).json({ auth: false, error: 'Access denied' })
         }
 
         const deletedPost = await prisma.post.delete({
@@ -66,7 +92,7 @@ export const modifyPost = async (req: Request, res: Response, next: NextFunction
         const { id } = req.params
         const data = req.body
 
-        let fullData
+        let fullData:any
         if (req.file) {
             const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
             fullData = {...data, imageUrl:imageUrl}
@@ -87,18 +113,31 @@ export const modifyPost = async (req: Request, res: Response, next: NextFunction
                 },
                 data: fullData,
                 include: {
-                    user: true,
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            imageUrl: true,
+                            isAdmin: true
+                        }
+                    },
                     reactions: true,
                     comments: {
                         include: {
-                            user: true
+                            user: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    imageUrl: true,
+                                }
+                            }
                         }
                     }
                 }
             })
             res.json(post)
         } else {
-            throw new Error
+            return res.status(401).json({ auth: false, error: 'Access denied' })
         }
         
     } catch (error) {

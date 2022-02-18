@@ -9,9 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.modifyPost = exports.deletePost = exports.createPost = exports.getAllPosts = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-exports.getAllPosts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllPosts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const posts = yield prisma.post.findMany({
             include: { user: true, comments: { include: { user: true } }, reactions: true }
@@ -22,7 +23,8 @@ exports.getAllPosts = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         next(error);
     }
 });
-exports.createPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllPosts = getAllPosts;
+const createPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = req.body;
         data.userId = Number(data.userId);
@@ -44,7 +46,8 @@ exports.createPost = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(error);
     }
 });
-exports.deletePost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createPost = createPost;
+const deletePost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const currentUser = res.locals.currentUser;
         const { id } = req.params;
@@ -67,7 +70,8 @@ exports.deletePost = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(error);
     }
 });
-exports.modifyPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deletePost = deletePost;
+const modifyPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const currentUser = res.locals.currentUser;
         const { id } = req.params;
@@ -111,4 +115,5 @@ exports.modifyPost = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(error);
     }
 });
+exports.modifyPost = modifyPost;
 //# sourceMappingURL=posts.controller.js.map

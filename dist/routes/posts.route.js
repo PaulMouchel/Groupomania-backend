@@ -5,14 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-const postsCtrl = require('../controllers/posts.controller');
-const auth = require('../middleware/auth.middleware');
-const currentUser = require('../middleware/currentUser.middleware');
-const multer = require('../middleware/multer.middleware');
-router.get('/', auth, postsCtrl.getAllPosts);
-router.post('/', auth, multer, postsCtrl.createPost);
-// router.get('/:id', auth, postsCtrl.getOnePost)
-router.delete('/:id', auth, currentUser, postsCtrl.deletePost);
-router.patch('/:id', auth, currentUser, multer, postsCtrl.modifyPost);
-module.exports = router;
+const posts_controller_1 = require("../controllers/posts.controller");
+const auth_middleware_1 = __importDefault(require("../middleware/auth.middleware"));
+const currentUser_middleware_1 = __importDefault(require("../middleware/currentUser.middleware"));
+const multer_middleware_1 = __importDefault(require("../middleware/multer.middleware"));
+router.get('/', auth_middleware_1.default, posts_controller_1.getAllPosts);
+router.post('/', auth_middleware_1.default, multer_middleware_1.default, posts_controller_1.createPost);
+router.delete('/:id', auth_middleware_1.default, currentUser_middleware_1.default, posts_controller_1.deletePost);
+router.patch('/:id', auth_middleware_1.default, currentUser_middleware_1.default, multer_middleware_1.default, posts_controller_1.modifyPost);
+exports.default = router;
 //# sourceMappingURL=posts.route.js.map

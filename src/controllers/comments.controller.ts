@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { PrismaClient } from "@prisma/client";
+import { Request, Response, NextFunction } from "express"
+import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 
 export const createComment = async (req:Request, res:Response, next:NextFunction) => {
@@ -65,7 +65,13 @@ export const modifyComment = async (req:Request, res:Response, next:NextFunction
             },
             data: data,
             include: {
-                user: true
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        imageUrl: true,
+                    }
+                }
             }
         })
         res.json(newComment)

@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -17,6 +8,11 @@ const createError = require('http-errors');
 const morgan_1 = __importDefault(require("morgan"));
 const helmet_1 = __importDefault(require("helmet"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const auth_route_1 = __importDefault(require("./routes/auth.route"));
+const users_route_1 = __importDefault(require("./routes/users.route"));
+const posts_route_1 = __importDefault(require("./routes/posts.route"));
+const comments_route_1 = __importDefault(require("./routes/comments.route"));
+const reactions_route_1 = __importDefault(require("./routes/reactions.route"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, helmet_1.default)());
@@ -29,21 +25,17 @@ app.use((req, res, next) => {
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, morgan_1.default)('dev'));
-app.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send({ message: 'Awesome it works 🐻' });
-}));
-const authRoutes = require('./routes/auth.route');
-const userRoutes = require('./routes/users.route');
-const postRoutes = require('./routes/posts.route');
-const commentRoutes = require('./routes/comments.route');
-const reactionRoutes = require('./routes/reactions.route');
 const path = require('path');
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/posts', postRoutes);
-app.use('/api/comments', commentRoutes);
-app.use('/api/reactions', reactionRoutes);
-app.use('/images', express_1.default.static(path.join(__dirname, 'images')));
+const test = () => {
+    console.log("test");
+};
+app.use('/api/auth', auth_route_1.default);
+app.use('/api/users', users_route_1.default);
+app.use('/api/posts', posts_route_1.default);
+app.use('/api/comments', comments_route_1.default);
+app.use('/api/reactions', reactions_route_1.default);
+app.use('/images', test);
+// app.use('../images', express.static(path.join(__dirname, '../images')));
 app.use((req, res, next) => {
     next(createError.NotFound());
 });

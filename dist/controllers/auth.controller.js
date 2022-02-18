@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.login = exports.signup = void 0;
 const client_1 = require("@prisma/client");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -19,7 +20,7 @@ const removePassword = (user) => {
         return obj;
     }, {});
 };
-exports.signup = (req, res, next) => {
+const signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then((hash) => __awaiter(void 0, void 0, void 0, function* () {
         const data = req.body;
@@ -34,7 +35,8 @@ exports.signup = (req, res, next) => {
     }))
         .catch(error => res.status(500).json({ error }));
 };
-exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.signup = signup;
+const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
         const user = yield prisma.user.findUnique({
@@ -62,4 +64,5 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         next(error);
     }
 });
+exports.login = login;
 //# sourceMappingURL=auth.controller.js.map

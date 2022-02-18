@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.modifyUser = exports.deleteUser = exports.createUser = exports.getOneUser = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const removePassword = (user) => {
@@ -17,7 +18,7 @@ const removePassword = (user) => {
         return obj;
     }, {});
 };
-exports.getOneUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getOneUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const user = yield prisma.user.findUnique({
@@ -46,7 +47,8 @@ exports.getOneUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(error);
     }
 });
-exports.createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getOneUser = getOneUser;
+const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = req.body;
         const user = yield prisma.user.create({
@@ -58,7 +60,8 @@ exports.createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(error);
     }
 });
-exports.deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createUser = createUser;
+const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const currentUser = res.locals.currentUser;
         const { id } = req.params;
@@ -81,7 +84,8 @@ exports.deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(error);
     }
 });
-exports.modifyUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteUser = deleteUser;
+const modifyUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const currentUser = res.locals.currentUser;
         const { id } = req.params;
@@ -114,4 +118,5 @@ exports.modifyUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(error);
     }
 });
+exports.modifyUser = modifyUser;
 //# sourceMappingURL=users.controller.js.map

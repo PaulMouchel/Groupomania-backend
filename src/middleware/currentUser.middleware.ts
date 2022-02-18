@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-const { PrismaClient } = require('@prisma/client')
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient()
 
 const currentUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -23,8 +23,8 @@ const currentUser = async (req: Request, res: Response, next: NextFunction) => {
         res.status(401).json({
             auth: false, 
             error: error
-        });
+        })
     }
-};
+}
 
 export default currentUser

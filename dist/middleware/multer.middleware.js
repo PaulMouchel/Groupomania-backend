@@ -19,5 +19,5 @@ const storage = multer_1.default.diskStorage({
         callback(null, name + Date.now() + '.' + extension);
     }
 });
-module.exports = (0, multer_1.default)({ storage: storage }).single('image');
+exports.default = (0, multer_1.default)({ storage: storage }).single('image');
 //# sourceMappingURL=multer.middleware.js.map

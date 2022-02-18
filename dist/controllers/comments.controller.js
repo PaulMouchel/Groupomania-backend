@@ -9,9 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.modifyComment = exports.deleteComment = exports.createComment = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-exports.createComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const createComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = req.body;
         const comment = yield prisma.comment.create({
@@ -24,7 +25,8 @@ exports.createComment = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         next(error);
     }
 });
-exports.deleteComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createComment = createComment;
+const deleteComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const currentUser = res.locals.currentUser;
         const { id } = req.params;
@@ -47,7 +49,8 @@ exports.deleteComment = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         next(error);
     }
 });
-exports.modifyComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteComment = deleteComment;
+const modifyComment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const currentUser = res.locals.currentUser;
         const { id } = req.params;
@@ -75,4 +78,5 @@ exports.modifyComment = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         next(error);
     }
 });
+exports.modifyComment = modifyComment;
 //# sourceMappingURL=comments.controller.js.map

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-module.exports = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const currentUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = res.locals.currentUserId;
         const currentUser = yield prisma.user.findUnique({
@@ -37,4 +37,5 @@ module.exports = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         });
     }
 });
+exports.default = currentUser;
 //# sourceMappingURL=currentUser.middleware.js.map

@@ -31,7 +31,6 @@ app.use('/api/posts', postRoutes)
 app.use('/api/comments', commentRoutes)
 app.use('/api/reactions', reactionRoutes)
 app.use('/images', express.static(path.join(__dirname, '../images')))
-
 app.use((req:Request, res:Response, next:NextFunction) => {
   next(new createError.NotFound())
 })

@@ -33,8 +33,10 @@ export const createPost = async (req: Request, res: Response, next: NextFunction
         const data = req.body
         data.userId = Number(data.userId)
         let fullData:any
+
         if (req.file) {
-            const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            const file = req.file  as Express.MulterS3.File
+            const imageUrl = file.location
             fullData = {...data, imageUrl:imageUrl}
         } else {
             fullData = data
@@ -94,7 +96,8 @@ export const modifyPost = async (req: Request, res: Response, next: NextFunction
 
         let fullData:any
         if (req.file) {
-            const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            const file = req.file  as Express.MulterS3.File
+            const imageUrl = file.location
             fullData = {...data, imageUrl:imageUrl}
         } else {
             fullData = data

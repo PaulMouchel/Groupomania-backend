@@ -4,7 +4,6 @@ const router = express.Router()
 import { createUser, getOneUser, deleteUser, modifyUser } from '../controllers/users.controller'
 import auth from '../middleware/auth.middleware'
 import currentUser from '../middleware/currentUser.middleware'
-import multer from '../middleware/multer.middleware'
 import multerS3 from '../middleware/multerS3.middleware'
 
 router.post('/', auth, createUser)

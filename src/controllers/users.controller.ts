@@ -116,14 +116,7 @@ export const modifyUser = async (req: Request, res: Response, next: NextFunction
         const data = req.body
         let fullData:any
         
-        // if (res.locals.imageUrl) {
-        //     fullData = {...data, imageUrl:res.locals.imageUrl}
-        // } else {
-        //     fullData = { name: data.name, description: data.description }
-        // }
         if (req.file) {
-            console.log(req.file)
-            // const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
             const file = req.file  as Express.MulterS3.File
             const imageUrl = file.location
             fullData = {...data, imageUrl:imageUrl}

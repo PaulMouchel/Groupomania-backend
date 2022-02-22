@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import { PrismaClient } from "@prisma/client"
 import { User } from "@prisma/client"
+import deleteS3object from "../middleware/deleteS3object.middleware"
 const prisma = new PrismaClient()
 
 const removePassword = (user:User) => {
@@ -98,6 +99,10 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
             return res.status(401).json({ auth: false, error: 'Access denied' })
         }
 
+        if (user.imageUrl) {
+            deleteS3object(user.imageUrl)
+        }
+
         await prisma.user.delete({
             where: {
                 id: Number(id)
@@ -109,7 +114,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
     }
 }
 
-export const modifyUser = async (req: Request, res: Response, next: NextFunction) => {
+export const modifyUser = async (req: Request, res: Response, next: NextFunction) => {  
     try {
         const currentUser = res.locals.currentUser
         const { id } = req.params
@@ -132,6 +137,10 @@ export const modifyUser = async (req: Request, res: Response, next: NextFunction
 
         if (user.id !== currentUser.id && !currentUser.isAdmin) {
             return res.status(401).json({ auth: false, error: 'Access denied' })
+        }
+
+        if (req.file) {
+            deleteS3object(user.imageUrl)
         }
 
         await prisma.user.update({

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { PrismaClient } from "@prisma/client"
+import deleteS3object from "../middleware/deleteS3object.middleware"
 const prisma = new PrismaClient()
 
 export const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
@@ -77,6 +78,10 @@ export const deletePost = async (req: Request, res: Response, next: NextFunction
             return res.status(401).json({ auth: false, error: 'Access denied' })
         }
 
+        if (post.imageUrl) {
+            deleteS3object(post.imageUrl)
+        }
+
         const deletedPost = await prisma.post.delete({
             where: {
                 id: Number(id)
@@ -109,39 +114,45 @@ export const modifyPost = async (req: Request, res: Response, next: NextFunction
             }
         })
 
-        if (oldPost.userId === currentUser.id || currentUser.isAdmin) {
-            const post = await prisma.post.update({
-                where: {
-                    id: Number(id)
+        if (oldPost.userId !== currentUser.id && !currentUser.isAdmin) {
+            return res.status(401).json({ auth: false, error: 'Access denied' })
+        }
+
+        const post = await prisma.post.update({
+            where: {
+                id: Number(id)
+            },
+            data: fullData,
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        imageUrl: true,
+                        isAdmin: true
+                    }
                 },
-                data: fullData,
-                include: {
-                    user: {
-                        select: {
-                            id: true,
-                            name: true,
-                            imageUrl: true,
-                            isAdmin: true
-                        }
-                    },
-                    reactions: true,
-                    comments: {
-                        include: {
-                            user: {
-                                select: {
-                                    id: true,
-                                    name: true,
-                                    imageUrl: true,
-                                }
+                reactions: true,
+                comments: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                imageUrl: true,
                             }
                         }
                     }
                 }
-            })
-            res.json(post)
-        } else {
-            return res.status(401).json({ auth: false, error: 'Access denied' })
+            }
+        })
+        
+        if (req.file) {
+            deleteS3object(oldPost.imageUrl)
         }
+
+        res.json(post)
+        
         
     } catch (error) {
         next(error)

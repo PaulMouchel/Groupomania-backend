@@ -1,21 +1,25 @@
-var aws = require('aws-sdk')
-var multer = require('multer')
-var multerS3 = require('multer-s3')
+import { Request } from "express"
+import aws from 'aws-sdk'
+import multer from "multer"
+import multerS3 from "multer-s3"
 
-var s3 = new aws.S3({
+const s3 = new aws.S3({
     accessKeyId: process.env.S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
 })
 
-var upload = multer({
+type MetadataCallback = (error: Error | null, metadata: any) => void
+type KeyCallback = (error: Error | null, key: string) => void
+
+const upload = multer({
     storage: multerS3({
       s3: s3,
       bucket: process.env.S3_BUCKET_NAME,
-      metadata: function (req, file, cb) {
-        cb(null, {fieldName: file.fieldname});
+      metadata: function (req:Request, file:Express.Multer.File, callback:MetadataCallback) {
+        callback(null, {fieldName: file.fieldname})
       },
-      key: function (req, file, cb) {
-        cb(null, Date.now().toString())
+      key: function (req:Request, file:Express.Multer.File, callback:KeyCallback) {
+        callback(null, Date.now().toString())
       }
     })
   })

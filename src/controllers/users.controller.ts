@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import { PrismaClient } from "@prisma/client"
 import { User } from "@prisma/client"
-console.log("test")
 import deleteS3object from "../middleware/deleteS3object.middleware"
-console.log("test2")
 const prisma = new PrismaClient()
 
 const removePassword = (user:User) => {

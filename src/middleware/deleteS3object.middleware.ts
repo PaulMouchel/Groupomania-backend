@@ -1,7 +1,9 @@
 import s3 from '../config/awsS3'
 
 const deleteS3object = async (imageUrl: string) => {
-    console.log("imageUrl :",imageUrl)
+    if (!imageUrl) {
+        return
+    }
     const splitedImageUrl = imageUrl.split('/')
     const key = splitedImageUrl[splitedImageUrl.length - 1]
 
